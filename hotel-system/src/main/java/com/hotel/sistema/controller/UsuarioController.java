@@ -1,5 +1,6 @@
 package com.hotel.sistema.controller;
 
+import com.hotel.sistema.entity.Usuario;
 import com.hotel.sistema.repository.RolRepository;
 import com.hotel.sistema.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UsuarioController {
 
     @Autowired private UsuarioService usuarioService;
-    @Autowired private RolRepository rolRepository;
+    @Autowired private RolRepository  rolRepository;
 
     @GetMapping
     public String listar(Model model) {
@@ -36,13 +37,33 @@ public class UsuarioController {
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute com.hotel.sistema.entity.Usuario usuario,
-                          @RequestParam(value = "idRol", required = false) Integer idRol,
+    public String guardar(@RequestParam Integer        idUsuario,
+                          @RequestParam String         nombre,
+                          @RequestParam String         apellido1,
+                          @RequestParam(required = false) String apellido2,
+                          @RequestParam String         identificacion,
+                          @RequestParam String         correo,
+                          @RequestParam(required = false) String telefono,
+                          @RequestParam String         username,
+                          @RequestParam(required = false) Integer idRol,
                           RedirectAttributes ra) {
-        if (idRol != null)
-            rolRepository.findById(idRol).ifPresent(usuario::setRol);
-        usuarioService.actualizar(usuario);
-        ra.addFlashAttribute("exito", "Usuario actualizado.");
+        // Buscar el usuario existente para no perder contraseña ni fecha
+        usuarioService.buscarPorId(idUsuario).ifPresent(u -> {
+            u.setNombre(nombre);
+            u.setApellido1(apellido1);
+            u.setApellido2(apellido2);
+            u.setIdentificacion(identificacion);
+            u.setCorreo(correo);
+            u.setTelefono(telefono);
+            u.setUsername(username);
+            if (idRol != null) {
+                rolRepository.findById(idRol).ifPresent(u::setRol);
+            } else {
+                u.setRol(null);
+            }
+            usuarioService.actualizar(u);
+        });
+        ra.addFlashAttribute("exito", "Usuario actualizado correctamente.");
         return "redirect:/usuarios";
     }
 }

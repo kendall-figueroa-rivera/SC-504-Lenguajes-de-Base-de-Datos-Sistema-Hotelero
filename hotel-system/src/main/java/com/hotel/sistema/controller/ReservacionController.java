@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Controller
 @RequestMapping("/reservaciones")
@@ -43,7 +44,6 @@ public class ReservacionController {
                           @RequestParam(required = false, defaultValue = "0") BigDecimal totalPago,
                           RedirectAttributes ra) {
 
-        // Llamar al Stored Procedure principal
         String resultado = reservacionService.crearReservacionSP(
                 idUsuario,
                 idHabitacion,
@@ -55,7 +55,9 @@ public class ReservacionController {
         if (resultado != null && resultado.startsWith("OK")) {
             ra.addFlashAttribute("exito", resultado.replace("OK: ", ""));
         } else {
-            ra.addFlashAttribute("error", resultado != null ? resultado.replace("ERROR: ", "") : "Error al crear reservación");
+            ra.addFlashAttribute("error", resultado != null
+                    ? resultado.replace("ERROR: ", "")
+                    : "Error al crear la reservación");
             return "redirect:/reservaciones/nueva";
         }
         return "redirect:/reservaciones";
@@ -70,8 +72,12 @@ public class ReservacionController {
 
     @GetMapping("/detalle/{id}")
     public String detalle(@PathVariable Integer id, Model model) {
-        model.addAttribute("reservacion",
-                reservacionService.buscarPorId(id).orElse(null));
+        reservacionService.buscarPorId(id).ifPresent(r -> {
+            model.addAttribute("reservacion", r);
+            // Calcular noches en Java para evitar usar #temporals.days en Thymeleaf
+            long noches = ChronoUnit.DAYS.between(r.getFechaEntrada(), r.getFechaSalida());
+            model.addAttribute("noches", noches);
+        });
         return "reservaciones/detalle";
     }
 }

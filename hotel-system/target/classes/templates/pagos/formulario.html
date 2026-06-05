@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8"/><title>Nuevo Pago | Hotel Lenguaje</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments :: sidebar('pagos')}"></div>
+    <div class="main-content">
+        <header class="topbar"><h1 class="page-title">Procesar Pago</h1></header>
+        <main class="page-body">
+            <div th:if="${error}" class="alert alert-danger"><i class="fas fa-exclamation-circle"></i><span th:text="${error}"></span></div>
+            <div class="card" style="max-width:560px;">
+                <div class="card-header"><span class="card-title">Datos del Pago</span></div>
+                <div class="card-body">
+                    <form th:action="@{/pagos/procesar}" method="post">
+                        <div class="form-group">
+                            <label class="form-label">Reservación</label>
+                            <select name="idReservacion" class="form-control" required>
+                                <option value="">Seleccionar reservación confirmada...</option>
+                                <option th:each="r : ${reservaciones}"
+                                        th:value="${r.idReservacion}"
+                                        th:text="'#' + ${r.idReservacion} + ' — ' + ${r.usuario.nombre} + ' ' + ${r.usuario.apellido1} + ' — ₡' + ${r.totalPago}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Método de Pago</label>
+                            <select name="idMetodoPago" class="form-control" required>
+                                <option value="">Seleccionar método...</option>
+                                <option th:each="m : ${metodos}" th:value="${m.idMetodoPago}" th:text="${m.nombre}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Monto (₡)</label>
+                            <input type="number" step="0.01" name="monto" class="form-control" placeholder="0.00" required/>
+                        </div>
+                        <div style="display:flex;gap:12px;margin-top:8px;">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Procesar Pago</button>
+                            <a th:href="@{/pagos}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>
