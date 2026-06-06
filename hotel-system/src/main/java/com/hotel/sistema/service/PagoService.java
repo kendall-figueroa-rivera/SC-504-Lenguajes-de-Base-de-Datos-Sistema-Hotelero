@@ -2,12 +2,14 @@ package com.hotel.sistema.service;
 
 import com.hotel.sistema.entity.Pago;
 import com.hotel.sistema.repository.PagoRepository;
+import com.hotel.sistema.repository.ReservacionRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.StoredProcedureQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +18,9 @@ import java.util.Optional;
 @SuppressWarnings("null")
 public class PagoService {
 
-    @Autowired private PagoRepository pagoRepository;
-    @Autowired private EntityManager entityManager;
+    @Autowired private PagoRepository        pagoRepository;
+    @Autowired private ReservacionRepository  reservacionRepository;
+    @Autowired private EntityManager          entityManager;
 
     public List<Pago> listarTodos() { return pagoRepository.findAll(); }
 
@@ -42,7 +45,18 @@ public class PagoService {
             q.setParameter("idMetodoPago",  idMetodoPago);
             q.setParameter("monto",         monto);
             q.execute();
-            return (String) q.getOutputParameterValue("mensaje");
+
+            String mensaje = (String) q.getOutputParameterValue("mensaje");
+
+            // Si el pago fue exitoso, actualizar estado de reservacion a "pagada"
+            if (mensaje != null && mensaje.startsWith("OK")) {
+                reservacionRepository.findById(idReservacion).ifPresent(r -> {
+                    r.setEstado("pagada");
+                    reservacionRepository.save(r);
+                });
+            }
+
+            return mensaje;
         } catch (Exception e) {
             return "ERROR: " + e.getMessage();
         }

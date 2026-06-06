@@ -26,17 +26,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())  // Desactivar CSRF temporalmente para pruebas
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                // Recursos públicos - acceso sin autenticación
+                // Publico
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                 .requestMatchers("/login", "/registro").permitAll()
+
                 // Solo ADMIN
-                .requestMatchers("/admin/**", "/usuarios/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/usuarios/**").hasRole("ADMIN")
                 .requestMatchers("/habitaciones/nueva", "/habitaciones/editar/**", "/habitaciones/eliminar/**").hasRole("ADMIN")
-                // ADMIN y RECEPCIONISTA
-                .requestMatchers("/reservaciones/**", "/pagos/**", "/facturas/**").hasAnyRole("ADMIN", "RECEPCIONISTA")
-                // Cualquier autenticado
+                .requestMatchers("/ofertas/nueva", "/ofertas/editar/**", "/ofertas/eliminar/**").hasRole("ADMIN")
+                .requestMatchers("/productos/nuevo", "/productos/guardar", "/productos/editar/**", "/productos/eliminar/**").hasRole("ADMIN")
+
+                // ADMIN y RECEPCIONISTA — gestion operativa
+                .requestMatchers("/pagos/**", "/facturas/**").hasAnyRole("ADMIN", "RECEPCIONISTA")
+                .requestMatchers("/reservaciones/nueva", "/reservaciones/guardar", "/reservaciones/cancelar/**").hasAnyRole("ADMIN", "RECEPCIONISTA")
+
+                // ADMIN, RECEPCIONISTA y CLIENTE — ver informacion
+                .requestMatchers("/reservaciones", "/reservaciones/detalle/**").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
+                .requestMatchers("/habitaciones", "/habitaciones/").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
+                .requestMatchers("/ofertas", "/ofertas/").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
+                .requestMatchers("/productos", "/productos/vender/**").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
+
+                // Dashboard accesible para todos
+                .requestMatchers("/dashboard", "/").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
+
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
