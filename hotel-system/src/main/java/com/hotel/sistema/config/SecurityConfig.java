@@ -29,27 +29,26 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 // Publico
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/login", "/registro").permitAll()
 
                 // Solo ADMIN
-                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/usuarios/**").hasRole("ADMIN")
                 .requestMatchers("/habitaciones/nueva", "/habitaciones/editar/**", "/habitaciones/eliminar/**").hasRole("ADMIN")
-                .requestMatchers("/ofertas/nueva", "/ofertas/editar/**", "/ofertas/eliminar/**").hasRole("ADMIN")
                 .requestMatchers("/productos/nuevo", "/productos/guardar", "/productos/editar/**", "/productos/eliminar/**").hasRole("ADMIN")
+                .requestMatchers("/ofertas/nueva", "/ofertas/guardar", "/ofertas/editar/**", "/ofertas/eliminar/**").hasRole("ADMIN")
 
-                // ADMIN y RECEPCIONISTA — gestion operativa
-                .requestMatchers("/pagos/**", "/facturas/**").hasAnyRole("ADMIN", "RECEPCIONISTA")
-                .requestMatchers("/reservaciones/nueva", "/reservaciones/guardar", "/reservaciones/cancelar/**").hasAnyRole("ADMIN", "RECEPCIONISTA")
+                // ADMIN y RECEPCIONISTA — gestion completa
+                .requestMatchers("/reservaciones/cancelar/**").hasAnyRole("ADMIN", "RECEPCIONISTA")
 
-                // ADMIN, RECEPCIONISTA y CLIENTE — ver informacion
-                .requestMatchers("/reservaciones", "/reservaciones/detalle/**").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
-                .requestMatchers("/habitaciones", "/habitaciones/").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
-                .requestMatchers("/ofertas", "/ofertas/").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
-                .requestMatchers("/productos", "/productos/vender/**").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
+                // ADMIN, RECEPCIONISTA y CLIENTE — con acceso diferenciado por vista
+                .requestMatchers("/reservaciones/**").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
+                .requestMatchers("/pagos/**").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
+                .requestMatchers("/habitaciones/**").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
+                .requestMatchers("/productos/**").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
+                .requestMatchers("/ofertas/**").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
 
-                // Dashboard accesible para todos
+                // Dashboard
                 .requestMatchers("/dashboard", "/").hasAnyRole("ADMIN", "RECEPCIONISTA", "CLIENTE")
 
                 .anyRequest().authenticated()

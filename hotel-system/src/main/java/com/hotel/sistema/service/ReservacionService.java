@@ -17,14 +17,9 @@ import java.util.Optional;
 @SuppressWarnings("null")
 public class ReservacionService {
 
-    @Autowired
-    private ReservacionRepository reservacionRepository;
-
-    @Autowired
-    private HabitacionRepository habitacionRepository;
-
-    @Autowired
-    private EntityManager entityManager;
+    @Autowired private ReservacionRepository reservacionRepository;
+    @Autowired private HabitacionRepository  habitacionRepository;
+    @Autowired private EntityManager         entityManager;
 
     public List<Reservacion> listarTodas() {
         return reservacionRepository.findAll();
@@ -43,6 +38,34 @@ public class ReservacionService {
         return habitacionRepository.findHabitacionesDisponibles(entrada, salida);
     }
 
+    // Buscar proxima disponibilidad de una habitacion
+    public String buscarProximaDisponibilidad(Integer idHabitacion, LocalDate desde) {
+        try {
+            // Buscar la reservacion activa mas proxima que bloquea esta habitacion
+            List<Reservacion> reservaciones = reservacionRepository
+                    .findByHabitacion_IdHabitacion(idHabitacion);
+
+            LocalDate proximaDisponible = null;
+            for (Reservacion r : reservaciones) {
+                if (!r.getEstado().equals("cancelada")
+                        && r.getFechaSalida().isAfter(desde)) {
+                    if (proximaDisponible == null
+                            || r.getFechaSalida().isAfter(proximaDisponible)) {
+                        proximaDisponible = r.getFechaSalida();
+                    }
+                }
+            }
+
+            if (proximaDisponible != null) {
+                return "La habitacion no esta disponible en esa fecha. " +
+                       "Proxima disponibilidad: " + proximaDisponible.toString();
+            }
+            return "La habitacion no esta disponible en esas fechas.";
+        } catch (Exception e) {
+            return "La habitacion no esta disponible en esas fechas.";
+        }
+    }
+
     @Transactional
     public Reservacion guardar(Reservacion reservacion) {
         return reservacionRepository.save(reservacion);
@@ -57,35 +80,32 @@ public class ReservacionService {
         });
     }
 
-    // -------------------------------------------------------
-    // Llamada a Stored Procedure de SQL Server
-    // Ajustar nombre y parámetros al SP real creado en SSMS
-    // -------------------------------------------------------
+    // Llamada al paquete Oracle pkg_reservaciones.crear
     @Transactional
     public String crearReservacionSP(Integer idUsuario, Integer idHabitacion,
                                       LocalDate fechaEntrada, LocalDate fechaSalida,
                                       Integer idOferta) {
         try {
-            StoredProcedureQuery query = entityManager
-                    .createStoredProcedureQuery("sp_CrearReservacion");
+            StoredProcedureQuery q = entityManager
+                    .createStoredProcedureQuery("pkg_reservaciones.crear");
 
-            query.registerStoredProcedureParameter("idUsuario",    Integer.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter("idHabitacion", Integer.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter("fechaEntrada", String.class,  ParameterMode.IN);
-            query.registerStoredProcedureParameter("fechaSalida",  String.class,  ParameterMode.IN);
-            query.registerStoredProcedureParameter("idOferta",     Integer.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter("mensaje",      String.class,  ParameterMode.OUT);
+            q.registerStoredProcedureParameter("p_idUsuario",    Integer.class,   ParameterMode.IN);
+            q.registerStoredProcedureParameter("p_idHabitacion", Integer.class,   ParameterMode.IN);
+            q.registerStoredProcedureParameter("p_fechaEntrada", java.sql.Date.class, ParameterMode.IN);
+            q.registerStoredProcedureParameter("p_fechaSalida",  java.sql.Date.class, ParameterMode.IN);
+            q.registerStoredProcedureParameter("p_idOferta",     Integer.class,   ParameterMode.IN);
+            q.registerStoredProcedureParameter("p_mensaje",      String.class,    ParameterMode.OUT);
 
-            query.setParameter("idUsuario",    idUsuario);
-            query.setParameter("idHabitacion", idHabitacion);
-            query.setParameter("fechaEntrada", fechaEntrada.toString());
-            query.setParameter("fechaSalida",  fechaSalida.toString());
-            query.setParameter("idOferta",     idOferta);
+            q.setParameter("p_idUsuario",    idUsuario);
+            q.setParameter("p_idHabitacion", idHabitacion);
+            q.setParameter("p_fechaEntrada", java.sql.Date.valueOf(fechaEntrada));
+            q.setParameter("p_fechaSalida",  java.sql.Date.valueOf(fechaSalida));
+            q.setParameter("p_idOferta",     idOferta);
 
-            query.execute();
-            return (String) query.getOutputParameterValue("mensaje");
+            q.execute();
+            return (String) q.getOutputParameterValue("p_mensaje");
         } catch (Exception e) {
-            return "Error al ejecutar procedimiento: " + e.getMessage();
+            return "ERROR: " + e.getMessage();
         }
     }
 }
