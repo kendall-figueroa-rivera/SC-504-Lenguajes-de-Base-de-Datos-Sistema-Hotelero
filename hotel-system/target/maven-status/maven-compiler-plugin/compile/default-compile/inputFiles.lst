@@ -6,8 +6,12 @@ C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-syst
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\controller\OfertaController.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\controller\PagoController.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\controller\ProductoController.java
+C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\controller\ReporteController.java
+C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\controller\ReservacionActivaController.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\controller\ReservacionController.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\controller\UsuarioController.java
+C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\dto\ReporteReservacionUsuarioDTO.java
+C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\dto\ReporteVentaProductoDTO.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\entity\CargoExtra.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\entity\DetalleVenta.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\entity\Factura.java
@@ -19,6 +23,7 @@ C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-syst
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\entity\Producto.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\entity\Reembolso.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\entity\Reservacion.java
+C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\entity\ReservacionActiva.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\entity\Rol.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\entity\Usuario.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\entity\Venta.java
@@ -29,6 +34,7 @@ C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-syst
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\repository\OfertaRepository.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\repository\PagoRepository.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\repository\ProductoRepository.java
+C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\repository\ReservacionActivaRepository.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\repository\ReservacionRepository.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\repository\RolRepository.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\repository\UsuarioRepository.java
@@ -36,5 +42,6 @@ C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-syst
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\service\OfertaService.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\service\PagoService.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\service\ProductoService.java
+C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\service\ReporteService.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\service\ReservacionService.java
 C:\lenguajes de bd\SC-504-Lenguajes-de-Base-de-Datos-Sistema-Hotelero\hotel-system\src\main\java\com\hotel\sistema\service\UsuarioService.java

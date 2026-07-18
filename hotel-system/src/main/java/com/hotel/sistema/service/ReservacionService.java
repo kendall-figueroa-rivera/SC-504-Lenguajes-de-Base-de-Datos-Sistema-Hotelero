@@ -3,12 +3,14 @@ package com.hotel.sistema.service;
 import com.hotel.sistema.entity.*;
 import com.hotel.sistema.repository.*;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.ParameterMode;
-import jakarta.persistence.StoredProcedureQuery;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.CallableStatement;
+import java.sql.Date;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -80,12 +82,21 @@ public class ReservacionService {
         });
     }
 
+<<<<<<< HEAD
     // Llamada al paquete Oracle pkg_reservaciones.crear
+=======
+    // -------------------------------------------------------
+    // Llamada al paquete pkg_reservaciones.crear (Oracle)
+    // -------------------------------------------------------
+>>>>>>> origin/feature/persona3_sp_ReporteVentasProductos
     @Transactional
     public String crearReservacionSP(Integer idUsuario, Integer idHabitacion,
                                       LocalDate fechaEntrada, LocalDate fechaSalida,
                                       Integer idOferta) {
+        final String[] resultado = new String[1];
+
         try {
+<<<<<<< HEAD
             StoredProcedureQuery q = entityManager
                     .createStoredProcedureQuery("pkg_reservaciones.crear");
 
@@ -106,6 +117,36 @@ public class ReservacionService {
             return (String) q.getOutputParameterValue("p_mensaje");
         } catch (Exception e) {
             return "ERROR: " + e.getMessage();
+=======
+            Session session = entityManager.unwrap(Session.class);
+
+            session.doWork(connection -> {
+                String sql = "{call pkg_reservaciones.crear(?,?,?,?,?,?)}";
+
+                try (CallableStatement stmt = connection.prepareCall(sql)) {
+                    stmt.setInt(1, idUsuario);
+                    stmt.setInt(2, idHabitacion);
+                    stmt.setDate(3, Date.valueOf(fechaEntrada));
+                    stmt.setDate(4, Date.valueOf(fechaSalida));
+
+                    if (idOferta != null) {
+                        stmt.setInt(5, idOferta);
+                    } else {
+                        stmt.setNull(5, Types.INTEGER);
+                    }
+
+                    stmt.registerOutParameter(6, Types.VARCHAR);
+                    stmt.execute();
+
+                    resultado[0] = stmt.getString(6);
+                }
+            });
+
+        } catch (Exception e) {
+            resultado[0] = "ERROR: " + e.getMessage();
+>>>>>>> origin/feature/persona3_sp_ReporteVentasProductos
         }
+
+        return resultado[0];
     }
 }
