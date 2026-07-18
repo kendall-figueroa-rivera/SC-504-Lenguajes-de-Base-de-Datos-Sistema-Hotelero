@@ -3,12 +3,14 @@ package com.hotel.sistema.service;
 import com.hotel.sistema.entity.*;
 import com.hotel.sistema.repository.*;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.ParameterMode;
-import jakarta.persistence.StoredProcedureQuery;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.CallableStatement;
+import java.sql.Date;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -58,34 +60,43 @@ public class ReservacionService {
     }
 
     // -------------------------------------------------------
-    // Llamada a Stored Procedure de SQL Server
-    // Ajustar nombre y parámetros al SP real creado en SSMS
+    // Llamada al paquete pkg_reservaciones.crear (Oracle)
     // -------------------------------------------------------
     @Transactional
     public String crearReservacionSP(Integer idUsuario, Integer idHabitacion,
                                       LocalDate fechaEntrada, LocalDate fechaSalida,
                                       Integer idOferta) {
+        final String[] resultado = new String[1];
+
         try {
-            StoredProcedureQuery query = entityManager
-                    .createStoredProcedureQuery("sp_CrearReservacion");
+            Session session = entityManager.unwrap(Session.class);
 
-            query.registerStoredProcedureParameter("idUsuario",    Integer.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter("idHabitacion", Integer.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter("fechaEntrada", String.class,  ParameterMode.IN);
-            query.registerStoredProcedureParameter("fechaSalida",  String.class,  ParameterMode.IN);
-            query.registerStoredProcedureParameter("idOferta",     Integer.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter("mensaje",      String.class,  ParameterMode.OUT);
+            session.doWork(connection -> {
+                String sql = "{call pkg_reservaciones.crear(?,?,?,?,?,?)}";
 
-            query.setParameter("idUsuario",    idUsuario);
-            query.setParameter("idHabitacion", idHabitacion);
-            query.setParameter("fechaEntrada", fechaEntrada.toString());
-            query.setParameter("fechaSalida",  fechaSalida.toString());
-            query.setParameter("idOferta",     idOferta);
+                try (CallableStatement stmt = connection.prepareCall(sql)) {
+                    stmt.setInt(1, idUsuario);
+                    stmt.setInt(2, idHabitacion);
+                    stmt.setDate(3, Date.valueOf(fechaEntrada));
+                    stmt.setDate(4, Date.valueOf(fechaSalida));
 
-            query.execute();
-            return (String) query.getOutputParameterValue("mensaje");
+                    if (idOferta != null) {
+                        stmt.setInt(5, idOferta);
+                    } else {
+                        stmt.setNull(5, Types.INTEGER);
+                    }
+
+                    stmt.registerOutParameter(6, Types.VARCHAR);
+                    stmt.execute();
+
+                    resultado[0] = stmt.getString(6);
+                }
+            });
+
         } catch (Exception e) {
-            return "Error al ejecutar procedimiento: " + e.getMessage();
+            resultado[0] = "ERROR: " + e.getMessage();
         }
+
+        return resultado[0];
     }
 }

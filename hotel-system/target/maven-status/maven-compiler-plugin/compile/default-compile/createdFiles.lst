@@ -1,3 +1,4 @@
+com\hotel\sistema\controller\ReservacionActivaController.class
 com\hotel\sistema\controller\AuthController.class
 com\hotel\sistema\repository\ReservacionRepository.class
 com\hotel\sistema\service\UsuarioService.class
@@ -6,6 +7,7 @@ com\hotel\sistema\repository\ProductoRepository.class
 com\hotel\sistema\entity\Rol.class
 com\hotel\sistema\service\HabitacionService.class
 com\hotel\sistema\service\ReservacionService.class
+com\hotel\sistema\entity\ReservacionActiva.class
 com\hotel\sistema\entity\Reservacion.class
 com\hotel\sistema\config\SecurityConfig.class
 com\hotel\sistema\entity\Oferta.class
@@ -13,6 +15,7 @@ com\hotel\sistema\entity\Habitacion.class
 com\hotel\sistema\repository\UsuarioRepository.class
 com\hotel\sistema\controller\HabitacionController.class
 com\hotel\sistema\service\PagoService.class
+com\hotel\sistema\dto\ReporteVentaProductoDTO.class
 com\hotel\sistema\entity\MetodoPago.class
 com\hotel\sistema\config\CustomUserDetailsService.class
 com\hotel\sistema\entity\Usuario.class
@@ -20,10 +23,14 @@ com\hotel\sistema\entity\CargoExtra.class
 com\hotel\sistema\controller\ReservacionController.class
 com\hotel\sistema\HotelSistemaApplication.class
 com\hotel\sistema\repository\OfertaRepository.class
+com\hotel\sistema\service\ReporteService.class
+com\hotel\sistema\controller\ReporteController.class
 com\hotel\sistema\repository\RolRepository.class
 com\hotel\sistema\entity\LoginAuditoria.class
+com\hotel\sistema\repository\ReservacionActivaRepository.class
 com\hotel\sistema\repository\HabitacionRepository.class
 com\hotel\sistema\repository\MetodoPagoRepository.class
+com\hotel\sistema\dto\ReporteReservacionUsuarioDTO.class
 com\hotel\sistema\entity\Factura.class
 com\hotel\sistema\service\OfertaService.class
 com\hotel\sistema\service\ProductoService.class
