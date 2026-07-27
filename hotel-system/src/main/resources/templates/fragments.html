@@ -95,11 +95,11 @@
                 <i class="fas fa-credit-card"></i><span>Mis Pagos</span>
             </a>
         </li>
-        <li class="nav-item" sec:authorize="hasRole('CLIENTE')">
+        <!-- <li class="nav-item" sec:authorize="hasRole('CLIENTE')">
             <a th:href="@{/ofertas}" th:class="'nav-link' + (${activo}=='ofertas'?' active':'')">
                 <i class="fas fa-tag"></i><span>Ofertas Disponibles</span>
             </a>
-        </li>
+        </li> -->
         <li class="nav-item" sec:authorize="hasRole('CLIENTE')">
             <a th:href="@{/productos}" th:class="'nav-link' + (${activo}=='productos'?' active':'')">
                 <i class="fas fa-box"></i><span>Productos</span>
