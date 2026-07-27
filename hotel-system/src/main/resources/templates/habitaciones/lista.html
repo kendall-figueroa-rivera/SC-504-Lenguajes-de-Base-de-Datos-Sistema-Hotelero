@@ -29,7 +29,12 @@
             <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a th:href="@{/usuarios}" class="nav-link"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
             <li class="nav-section">INVENTARIO</li>
             <li class="nav-item"><a th:href="@{/productos}" class="nav-link"><i class="fas fa-box"></i><span>Productos</span></a></li>
-            <li class="nav-item"><a th:href="@{/ofertas}" class="nav-link"><i class="fas fa-tag"></i><span>Ofertas</span></a></li>
+            <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','RECEPCIONISTA')">
+                <a th:href="@{/ofertas}" class="nav-link">
+                    <i class="fas fa-tag"></i>
+                    <span>Ofertas</span>
+                </a>
+            </li>
         </ul>
         <div class="sidebar-footer">
             <div class="user-info">

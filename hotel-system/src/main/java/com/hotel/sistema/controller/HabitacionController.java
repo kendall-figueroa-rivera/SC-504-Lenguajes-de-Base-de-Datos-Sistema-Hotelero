@@ -28,22 +28,60 @@ public class HabitacionController {
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Habitacion habitacion, RedirectAttributes ra) {
-        habitacionService.guardar(habitacion);
-        ra.addFlashAttribute("exito", "Habitación guardada correctamente.");
+    public String guardar(
+            @ModelAttribute Habitacion habitacion,
+            RedirectAttributes ra
+    ) {
+        String resultado = habitacionService.guardarSP(habitacion);
+
+        if (resultado != null && resultado.startsWith("OK")) {
+            ra.addFlashAttribute(
+                    "exito",
+                    resultado.replace("OK: ", "")
+            );
+        } else {
+            ra.addFlashAttribute(
+                    "error",
+                    resultado == null
+                            ? "No se recibió respuesta del procedimiento."
+                            : resultado.replace("ERROR: ", "")
+            );
+        }
+
         return "redirect:/habitaciones";
     }
 
     @GetMapping("/editar/{id}")
     public String editarForm(@PathVariable Integer id, Model model) {
-        habitacionService.buscarPorId(id).ifPresent(h -> model.addAttribute("habitacion", h));
+        habitacionService.buscarPorId(id)
+                .ifPresent(habitacion ->
+                        model.addAttribute("habitacion", habitacion)
+                );
+
         return "habitaciones/formulario";
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Integer id, RedirectAttributes ra) {
-        habitacionService.eliminar(id);
-        ra.addFlashAttribute("exito", "Habitación eliminada.");
+    public String eliminar(
+            @PathVariable Integer id,
+            RedirectAttributes ra
+    ) {
+        String resultado = habitacionService.eliminarSP(id);
+
+        if (resultado != null && resultado.startsWith("OK")) {
+            ra.addFlashAttribute(
+                    "exito",
+                    resultado.replace("OK: ", "")
+            );
+        } else {
+            ra.addFlashAttribute(
+                    "error",
+                    resultado == null
+                            ? "No se recibió respuesta del procedimiento."
+                            : resultado.replace("ERROR: ", "")
+            );
+        }
+
         return "redirect:/habitaciones";
     }
 }
